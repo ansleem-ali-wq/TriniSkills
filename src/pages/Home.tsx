@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { Input } from '../components/ui/input'
 import { Select } from '../components/ui/select'
-import { Search, MapPin, Phone, User as UserIcon, Briefcase, ChevronDown } from 'lucide-react'
+import { Search, MapPin, Phone, User as UserIcon, Briefcase, ChevronDown, Award } from 'lucide-react'
 import { motion } from 'motion/react'
 
 interface Profile {
@@ -13,6 +13,7 @@ interface Profile {
   phone: string
   bio: string
   media_urls?: string[]
+  badge?: 'gold' | 'silver' | 'bronze' | null
 }
 
 const CATEGORIES = [
@@ -232,9 +233,21 @@ export function Home() {
                           {profile.full_name?.charAt(0).toUpperCase() || <UserIcon className="w-6 h-6" />}
                         </div>
                         <div>
-                          <h3 className="font-display font-bold text-lg text-zinc-900 group-hover:text-indigo-600 transition-colors">
-                            {profile.full_name || 'Anonymous'}
-                          </h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-display font-bold text-lg text-zinc-900 group-hover:text-indigo-600 transition-colors">
+                              {profile.full_name || 'Anonymous'}
+                            </h3>
+                            {profile.badge && (
+                              <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+                                profile.badge === 'gold' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                                profile.badge === 'silver' ? 'bg-slate-100 text-slate-700 border border-slate-200' :
+                                'bg-orange-100 text-orange-800 border border-orange-200'
+                              }`}>
+                                <Award className="w-3 h-3" />
+                                <span className="capitalize">{profile.badge}</span>
+                              </div>
+                            )}
+                          </div>
                           <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-100 text-zinc-600 mt-1">
                             {profile.skill_category}
                           </span>

@@ -6,7 +6,7 @@ import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Select } from '../components/ui/select'
-import { UserCircle, CheckCircle2, Upload, X, Image as ImageIcon, Film } from 'lucide-react'
+import { UserCircle, CheckCircle2, Upload, X, Image as ImageIcon, Film, Award } from 'lucide-react'
 import { motion } from 'motion/react'
 
 const CATEGORIES = [
@@ -55,6 +55,7 @@ export function Profile() {
     phone: '',
     bio: '',
     media_urls: [] as string[],
+    badge: null as 'gold' | 'silver' | 'bronze' | null,
   })
 
   useEffect(() => {
@@ -86,6 +87,7 @@ export function Profile() {
           phone: data.phone || '',
           bio: data.bio || '',
           media_urls: data.media_urls || [],
+          badge: data.badge || null,
         })
       }
     } catch (err: any) {
@@ -142,7 +144,12 @@ export function Profile() {
     try {
       const updates = {
         id: user?.id,
-        ...formData,
+        full_name: formData.full_name,
+        skill_category: formData.skill_category,
+        location: formData.location,
+        phone: formData.phone,
+        bio: formData.bio,
+        media_urls: formData.media_urls,
         updated_at: new Date().toISOString(),
       }
 
@@ -185,7 +192,19 @@ export function Profile() {
             <UserCircle className="w-12 h-12" />
           </div>
           <div>
-            <h1 className="text-3xl font-display font-bold text-zinc-900 tracking-tight">Your Public Profile</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-display font-bold text-zinc-900 tracking-tight">Your Public Profile</h1>
+              {formData.badge && (
+                <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold shadow-sm ${
+                  formData.badge === 'gold' ? 'bg-gradient-to-r from-amber-200 to-yellow-400 text-amber-900 border border-amber-300' :
+                  formData.badge === 'silver' ? 'bg-gradient-to-r from-slate-200 to-zinc-300 text-slate-800 border border-slate-300' :
+                  'bg-gradient-to-r from-orange-200 to-orange-300 text-orange-900 border border-orange-300'
+                }`}>
+                  <Award className="w-4 h-4" />
+                  <span className="capitalize">{formData.badge} Pro</span>
+                </div>
+              )}
+            </div>
             <p className="text-zinc-500 mt-2 text-sm sm:text-base">Update your information to help clients find and contact you.</p>
           </div>
         </div>
